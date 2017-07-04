@@ -12,6 +12,8 @@
 
 @property (nonatomic, strong) UIButton *btn;
 
+@property (nonatomic, strong) UIButton *bgBtn;
+
 @end
 
 
@@ -20,6 +22,15 @@
 - (instancetype)initWithFrame:(CGRect)frame{
     if(self = [super initWithFrame:frame])
     {
+
+        //背景btn
+        self.bgBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        self.bgBtn.frame = self.bounds;
+        self.bgBtn.backgroundColor = [UIColor clearColor];
+        [self.bgBtn addTarget:self action:@selector(removeView) forControlEvents:UIControlEventTouchUpInside];
+        [self addSubview:self.bgBtn];
+        
+        //选择btn
         self.btn = [UIButton buttonWithType:UIButtonTypeCustom];
         self.btn.frame = CGRectMake(0, 0, CGRectGetWidth(frame), CGRectGetHeight(frame));
         [self.btn setBackgroundColor:[UIColor blueColor]];
@@ -36,6 +47,7 @@
 {
     CGRect frame = self.frame;
     self.frame = [UIScreen mainScreen].bounds;
+    self.bgBtn.frame = self.frame;
     self.btn.frame = CGRectMake(frame.origin.x, frame.origin.y, CGRectGetWidth(frame), CGRectGetHeight(frame));
     btn.enabled = NO;
     if(!self.isUp)
@@ -61,6 +73,10 @@
 }
 - (void)removeView
 {
+    _btn.enabled = YES;
+    self.frame = CGRectMake(_btn.frame.origin.x, _btn.frame.origin.y, CGRectGetWidth(_btn.frame), CGRectGetHeight(_btn.frame));
+    self.btn.frame = CGRectMake(0, 0, CGRectGetWidth(_btn.frame), CGRectGetHeight(_btn.frame));
+    self.bgBtn.frame = self.btn.frame;
     [self.tableView removeFromSuperview];
 }
 #pragma mark - UITableViewDataSource
@@ -89,6 +105,7 @@
 {
     _btn.enabled = YES;
     self.frame = CGRectMake(_btn.frame.origin.x, _btn.frame.origin.y, CGRectGetWidth(_btn.frame), CGRectGetHeight(_btn.frame));
+    self.bgBtn.frame = CGRectMake(0, 0,  CGRectGetWidth(_btn.frame),  CGRectGetHeight(_btn.frame));
     self.btn.frame = CGRectMake(0, 0, CGRectGetWidth(self.frame), CGRectGetHeight(self.frame));
     [self.btn setTitle:self.dataSource[indexPath.row] forState:UIControlStateNormal];
     _text = self.dataSource[indexPath.row];
